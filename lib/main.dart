@@ -16,6 +16,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Reading',
       home: MainPage(),
+      theme: new ThemeData(
+        primaryColor: Color(0xfffddbd0),
+      ),
     );
   }
 }

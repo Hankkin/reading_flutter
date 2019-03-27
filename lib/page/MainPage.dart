@@ -12,6 +12,9 @@ class MainPage extends StatelessWidget {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MainPageWidget(),
+      theme: new ThemeData(
+        primaryColor: Color(0xfffddbd0),
+      )
     );
   }
 }
@@ -44,7 +47,7 @@ class MainPageState extends State<MainPageWidget> {
 
   Text getTabTitle(int index) {
     if (index == tabIndex) {
-      return new Text(titles[index], style: new TextStyle(color: Colors.blue));
+      return new Text(titles[index]);
     } else {
       return new Text(titles[index],
           style: new TextStyle(color: Colors.black26));

@@ -40,10 +40,10 @@ class WebPageState extends State<WebPage> {
     content
         .add(new Text(widget.title, style: new TextStyle(color: Colors.white)));
     if (!isLoad) {
-      content.add(new CircularProgressIndicator());
+      content.add(new CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.white,)));
     }
     content.add(new Container(
-      width: 50,
+      width: 30,
     ));
     return new WebviewScaffold(
       url: widget.url,
