@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
               elevation: 0,
               centerTitle: true,
               actions: <Widget>[
-                IconButton(
+                IconButton( 
                   icon: Icon(
                     Icons.search,
                     color: Colors.white,

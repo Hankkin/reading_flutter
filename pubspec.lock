@@ -8,6 +8,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.8"
+  banner_view:
+    dependency: "direct main"
+    description:
+      name: banner_view
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.1.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -158,3 +165,4 @@ packages:
     version: "2.0.8"
 sdks:
   dart: ">=2.1.1-dev.0.0 <3.0.0"
+  flutter: ">=0.1.2"
