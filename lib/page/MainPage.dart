@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:reading_flutter/page/GankPage.dart';
@@ -9,6 +11,10 @@ import 'package:reading_flutter/utils/ViewHelper.dart';
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    if(Platform.isAndroid) {
+      SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+      SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+    }
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MainPageWidget(),

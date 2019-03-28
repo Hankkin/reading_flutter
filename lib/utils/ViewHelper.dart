@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reading_flutter/page/common/WebPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:reading_flutter/utils/ToastUtils.dart';
 
 class ViewHelper {
   static void showAbout(BuildContext context) {
@@ -96,12 +97,7 @@ class ViewHelper {
                   children: <Widget>[
                     new GestureDetector(
                       onTap: () {
-                        Fluttertoast.showToast(
-                            msg: '敬请期待',
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIos: 1,
-                            fontSize: 16.0);
+                        ToastUtils.toast("敬请期待");
                       },
                       child: new Container(
                         margin: const EdgeInsets.only(top: 10, left: 40),
