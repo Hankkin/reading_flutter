@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:reading_flutter/page/common/WebPage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:reading_flutter/utils/ToastUtils.dart';
 
 class ViewHelper {
