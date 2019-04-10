@@ -34,3 +34,9 @@ class Gaps {
   static Widget vGap10 = new SizedBox(height: Dimens.gap_dp10);
   static Widget vGap15 = new SizedBox(height: Dimens.gap_dp15);
 }
+class RStyle {
+  static TextStyle themeTxt = TextStyle(
+    color: Color(0xff057FFF),
+    fontSize: 15
+  ); 
+}

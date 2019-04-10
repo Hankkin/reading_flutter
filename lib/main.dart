@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:reading_flutter/page/MainPage.dart';
+import 'package:reading_flutter/page/main_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,11 +14,9 @@ class MyApp extends StatelessWidget {
       SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
     }
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Reading',
       home: MainPage(),
-      theme: new ThemeData(
-        primaryColor: Color(0xfffddbd0),
-      ),
     );
   }
 }
