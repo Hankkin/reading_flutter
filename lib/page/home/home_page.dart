@@ -5,6 +5,7 @@ import 'package:reading_flutter/http/api_service.dart';
 import 'package:reading_flutter/model/article_model.dart';
 import 'package:reading_flutter/page/common/web_page.dart';
 import 'package:reading_flutter/page/home/banner.dart';
+import 'package:reading_flutter/res/styles.dart';
 import 'package:reading_flutter/utils/ToastUtils.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,11 +28,64 @@ class HomeState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: createAppBar(),
+        appBar: _createAppBar(),
         body: RefreshIndicator(
-            child: ListView.separated(
-                itemBuilder: null, separatorBuilder: null, itemCount: null),
+            child: Container(
+              color: Colors.white,
+              child: ListView.separated(
+                  itemBuilder: _createListView,
+                  separatorBuilder: (BuildContext context, index) {
+                    return Container(
+                      height: 5,
+                      color: Colors.transparent,
+                    );
+                  },
+                  itemCount: _datas.length + 2),
+            ),
             onRefresh: _getData));
+  }
+
+  Widget _createListView(BuildContext context, int index) {
+    if (index == 0) {
+      return Container(
+        height: 200,
+        color: Colors.grey,
+        child: new BannerWidget(),
+      );
+    }
+    if (index < _datas.length - 1) {
+      return InkWell(
+        onTap: () {},
+        child: Card(
+          margin: EdgeInsets.all(10),
+          elevation: 2.0,
+          child: Column(
+            children: <Widget>[
+              Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(15),
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      _datas[index - 1].author,
+                      style: TextStyles.listSub,
+                      textAlign: TextAlign.left,
+                    ),
+                    Expanded(
+                      child: Text(
+                        _datas[index - 1].niceDate,
+                        style: TextStyles.listSub,
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    }
   }
 
   Future<Null> _getData() async {
@@ -50,7 +104,7 @@ class HomeState extends State<HomePage> {
     }, _page);
   }
 
-  Widget createAppBar() {
+  Widget _createAppBar() {
     return new AppBar(
         leading: IconButton(
           icon: Icon(

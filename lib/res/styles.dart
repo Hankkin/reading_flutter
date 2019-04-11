@@ -16,6 +16,11 @@ class TextStyles {
     fontSize: Dimens.font_sp12,
     color: Colors.black54,
   );
+
+  static TextStyle listSub = TextStyle(
+    fontSize: Dimens.font_sp12,
+    color: Colors.black45,
+  );
 }
 
 class Decorations {
