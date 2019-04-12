@@ -4,22 +4,23 @@ import 'package:reading_flutter/res/dimens.dart';
 
 class TextStyles {
   static TextStyle listTitle = TextStyle(
-    fontSize: Dimens.font_sp16,
-    color: Colors.black54,
-    fontWeight: FontWeight.bold,
+    fontSize: Dimens.font_sp14,
+    color: Colors.black87,
   );
   static TextStyle listContent = TextStyle(
-    fontSize: Dimens.font_sp14,
-    color: Colors.black54,
-  );
-  static TextStyle listExtra = TextStyle(
-    fontSize: Dimens.font_sp12,
-    color: Colors.black54,
+    fontSize: Dimens.font_sp15,
+    color: Colors.black87,
+    fontWeight: FontWeight.bold
   );
 
   static TextStyle listSub = TextStyle(
     fontSize: Dimens.font_sp12,
-    color: Colors.black45,
+    color: Colors.black54,
+  );
+
+  static TextStyle themeTxt = TextStyle(
+      color: Color(0xff057FFF),
+      fontSize: 14
   );
 }
 
@@ -38,10 +39,4 @@ class Gaps {
   static Widget vGap5 = new SizedBox(height: Dimens.gap_dp5);
   static Widget vGap10 = new SizedBox(height: Dimens.gap_dp10);
   static Widget vGap15 = new SizedBox(height: Dimens.gap_dp15);
-}
-class RStyle {
-  static TextStyle themeTxt = TextStyle(
-    color: Color(0xff057FFF),
-    fontSize: 15
-  ); 
 }

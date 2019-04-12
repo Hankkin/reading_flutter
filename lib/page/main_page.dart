@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:reading_flutter/page/gank_page.dart';
+import 'package:reading_flutter/components/drawer_widget.dart';
+import 'package:reading_flutter/page/gank/gank_page.dart';
 import 'package:reading_flutter/page/home/home_page.dart';
 import 'package:reading_flutter/page/person_page.dart';
 import 'package:reading_flutter/page/wechat_page.dart';
@@ -54,7 +55,7 @@ class MainPageState extends State<MainPageWidget> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        drawer: new Drawer(),
+        drawer: DrawerWidget(),
         body: new IndexedStack(
           children: _pages,
           index: tabIndex,
@@ -97,14 +98,14 @@ class MainPageState extends State<MainPageWidget> {
                     onPressed: () => Navigator.of(context).pop(false),
                     child: new Text(
                       '再看一会',
-                      style: RStyle.themeTxt,
+                      style: TextStyles.themeTxt,
                     ),
                   ),
                   new FlatButton(
                     onPressed: () => Navigator.of(context).pop(true),
                     child: new Text(
                       '退出',
-                      style: RStyle.themeTxt,
+                      style: TextStyles.themeTxt,
                     ),
                   ),
                 ],

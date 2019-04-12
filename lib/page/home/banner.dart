@@ -17,10 +17,11 @@ class BannerWidgetState extends State<BannerWidget> {
   @override
   void initState() {
     super.initState();
+    _bannerList.add(null);
     _getBanner();
   }
 
-  void _getBanner() {
+  Future<Null> _getBanner() async{
     ApiService().getBanner((BannerModel _bannerModel) {
       if (_bannerModel.data.length > 0) {
         setState(() {

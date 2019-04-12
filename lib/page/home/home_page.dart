@@ -18,66 +18,107 @@ class HomePage extends StatefulWidget {
 class HomeState extends State<HomePage> {
   List<Article> _datas = new List();
   int _page = 0;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _getData();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _loadRequest();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color.fromARGB(255, 242, 243, 247),
         appBar: _createAppBar(),
         body: RefreshIndicator(
-            child: Container(
-              color: Colors.white,
-              child: ListView.separated(
-                  itemBuilder: _createListView,
-                  separatorBuilder: (BuildContext context, index) {
-                    return Container(
-                      height: 5,
-                      color: Colors.transparent,
-                    );
-                  },
-                  itemCount: _datas.length + 2),
-            ),
-            onRefresh: _getData));
+          displacement: 15,
+          onRefresh: _getData,
+          child: ListView.separated(
+              controller: _scrollController,
+              itemBuilder: _createListView,
+              separatorBuilder: (BuildContext context, index) {
+                return Container(
+                  height: 5,
+                  color: Colors.transparent,
+                );
+              },
+              itemCount: _datas.length + 2),
+        ));
   }
 
+  //创建Item
   Widget _createListView(BuildContext context, int index) {
     if (index == 0) {
       return Container(
-        height: 200,
-        color: Colors.grey,
+        height: 150,
         child: new BannerWidget(),
       );
     }
     if (index < _datas.length - 1) {
       return InkWell(
-        onTap: () {},
-        child: Card(
-          margin: EdgeInsets.all(10),
-          elevation: 2.0,
+        onTap: () {
+          Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+            return new WebPage(
+                title: _datas[index - 1].title, url: _datas[index - 1].link);
+          }));
+        },
+        child: Container(
+          margin: EdgeInsets.only(top: 5),
+          color: Colors.white,
+          padding: EdgeInsets.all(15),
           child: Column(
             children: <Widget>[
               Container(
-                color: Colors.white,
-                padding: EdgeInsets.all(15),
                 child: Row(
                   children: <Widget>[
                     Text(
                       _datas[index - 1].author,
-                      style: TextStyles.listSub,
+                      style: TextStyles.listTitle,
                       textAlign: TextAlign.left,
                     ),
                     Expanded(
                       child: Text(
-                        _datas[index - 1].niceDate,
+                        "${_datas[index - 1].chapterName} / ${_datas[index - 1].superChapterName}",
                         style: TextStyles.listSub,
                         textAlign: TextAlign.right,
                       ),
-                    ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        _datas[index - 1].title,
+                        style: TextStyles.listContent,
+                        maxLines: 2,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                child: Row(
+                  children: <Widget>[
+                    _getTagText(index),
+                    Expanded(
+                      child: Text(
+                        _datas[index - 1].niceDate,
+                        textAlign: TextAlign.right,
+                        style: TextStyles.listSub,
+                      ),
+                    )
                   ],
                 ),
               )
@@ -85,6 +126,21 @@ class HomeState extends State<HomePage> {
           ),
         ),
       );
+    }
+  }
+
+  Widget _getTagText(int index) {
+    if (_datas[index - 1].tags.length > 0) {
+      String tagStr = "";
+      _datas[index - 1].tags.forEach((tag) {
+        tagStr = "$tagStr" + "${tag.name}";
+      });
+      return Text(
+        tagStr,
+        style: TextStyles.themeTxt,
+      );
+    } else {
+      return Text("");
     }
   }
 
@@ -102,6 +158,19 @@ class HomeState extends State<HomePage> {
     }, (DioError error) {
       print(error.response);
     }, _page);
+  }
+
+  Future<Null> _loadRequest() async {
+    _page++;
+    ApiService().getArticleList((ArticleModel _articleModel) {
+      if (_articleModel.errorCode == 0) {
+        if (_articleModel.data.datas.length > 0) {
+          setState(() {
+            _datas.addAll(_articleModel.data.datas);
+          });
+        }
+      } else {}
+    }, (DioError error) {}, _page);
   }
 
   Widget _createAppBar() {
