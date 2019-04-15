@@ -17,15 +17,15 @@ class BannerWidgetState extends State<BannerWidget> {
   @override
   void initState() {
     super.initState();
-    _bannerList.add(null);
     _getBanner();
   }
 
-  Future<Null> _getBanner() async{
+  Future<Null> _getBanner() async {
     ApiService().getBanner((BannerModel _bannerModel) {
       if (_bannerModel.data.length > 0) {
         setState(() {
-          _bannerList = _bannerModel.data;
+          _bannerList.clear();
+          _bannerList.addAll(_bannerModel.data);
         });
       }
     });
@@ -34,17 +34,19 @@ class BannerWidgetState extends State<BannerWidget> {
   @override
   Widget build(BuildContext context) {
     return Swiper(
-      itemCount: _bannerList.length,
-      autoplay: true,
-      pagination: new SwiperPagination(),
       itemBuilder: (BuildContext context, int index) {
         if (_bannerList[index] == null ||
             _bannerList[index].imagePath == null) {
-          return new Container(color: Colors.grey[100]);
+          return new Container(
+            color: Colors.grey[100],
+          );
         } else {
-          createBannerItem(context, index);
+          return createBannerItem(context, index);
         }
       },
+      itemCount: _bannerList.length,
+      autoplay: true,
+      pagination: new SwiperPagination(),
     );
   }
 

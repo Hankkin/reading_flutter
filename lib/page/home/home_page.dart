@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomeState extends State<HomePage> {
-  List<Article> _datas = new List();
+  List<Article> _data = new List();
   int _page = 0;
   ScrollController _scrollController = ScrollController();
 
@@ -30,6 +30,12 @@ class HomeState extends State<HomePage> {
         _loadRequest();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
   }
 
   @override
@@ -49,7 +55,7 @@ class HomeState extends State<HomePage> {
                   color: Colors.transparent,
                 );
               },
-              itemCount: _datas.length + 2),
+              itemCount: _data.length + 2),
         ));
   }
 
@@ -61,12 +67,12 @@ class HomeState extends State<HomePage> {
         child: new BannerWidget(),
       );
     }
-    if (index < _datas.length - 1) {
+    if (index < _data.length - 1) {
       return InkWell(
         onTap: () {
           Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
             return new WebPage(
-                title: _datas[index - 1].title, url: _datas[index - 1].link);
+                title: _data[index - 1].title, url: _data[index - 1].link);
           }));
         },
         child: Container(
@@ -79,13 +85,13 @@ class HomeState extends State<HomePage> {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      _datas[index - 1].author,
+                      _data[index - 1].author,
                       style: TextStyles.listTitle,
                       textAlign: TextAlign.left,
                     ),
                     Expanded(
                       child: Text(
-                        "${_datas[index - 1].chapterName} / ${_datas[index - 1].superChapterName}",
+                        "${_data[index - 1].chapterName} / ${_data[index - 1].superChapterName}",
                         style: TextStyles.listSub,
                         textAlign: TextAlign.right,
                       ),
@@ -99,7 +105,7 @@ class HomeState extends State<HomePage> {
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        _datas[index - 1].title,
+                        _data[index - 1].title,
                         style: TextStyles.listContent,
                         maxLines: 2,
                       ),
@@ -114,7 +120,7 @@ class HomeState extends State<HomePage> {
                     _getTagText(index),
                     Expanded(
                       child: Text(
-                        _datas[index - 1].niceDate,
+                        _data[index - 1].niceDate,
                         textAlign: TextAlign.right,
                         style: TextStyles.listSub,
                       ),
@@ -130,9 +136,9 @@ class HomeState extends State<HomePage> {
   }
 
   Widget _getTagText(int index) {
-    if (_datas[index - 1].tags.length > 0) {
+    if (_data[index - 1].tags.length > 0) {
       String tagStr = "";
-      _datas[index - 1].tags.forEach((tag) {
+      _data[index - 1].tags.forEach((tag) {
         tagStr = "$tagStr" + "${tag.name}";
       });
       return Text(
@@ -149,8 +155,10 @@ class HomeState extends State<HomePage> {
     ApiService().getArticleList((ArticleModel _articleModel) {
       if (_articleModel.errorCode == 0) {
         if (_articleModel.data.datas.length > 0) {
-          _datas.clear();
-          _datas.addAll(_articleModel.data.datas);
+          setState(() {
+            _data.clear();
+            _data.addAll(_articleModel.data.datas);
+          });
         } else {}
       } else {
         ToastUtils.toast(_articleModel.errorMsg);
@@ -166,7 +174,7 @@ class HomeState extends State<HomePage> {
       if (_articleModel.errorCode == 0) {
         if (_articleModel.data.datas.length > 0) {
           setState(() {
-            _datas.addAll(_articleModel.data.datas);
+            _data.addAll(_articleModel.data.datas);
           });
         }
       } else {}
