@@ -19,6 +19,7 @@ class HomeState extends State<HomePage> {
   List<Article> _data = new List();
   int _page = 0;
   ScrollController _scrollController = ScrollController();
+  bool showToTopBtn = false; //是否显示“返回到顶部”按钮
 
   @override
   void initState() {
@@ -28,6 +29,17 @@ class HomeState extends State<HomePage> {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         _loadRequest();
+      }
+
+      //当前位置是否超过屏幕高度
+      if (_scrollController.offset < 200 && showToTopBtn) {
+        setState(() {
+          showToTopBtn = false;
+        });
+      } else if (_scrollController.offset >= 200 && showToTopBtn == false) {
+        setState(() {
+          showToTopBtn = true;
+        });
       }
     });
   }
@@ -41,22 +53,33 @@ class HomeState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 242, 243, 247),
-        appBar: _createAppBar(),
-        body: RefreshIndicator(
-          displacement: 15,
-          onRefresh: _getData,
-          child: ListView.separated(
-              controller: _scrollController,
-              itemBuilder: _createListView,
-              separatorBuilder: (BuildContext context, index) {
-                return Container(
-                  height: 5,
-                  color: Colors.transparent,
-                );
-              },
-              itemCount: _data.length + 2),
-        ));
+      backgroundColor: Color.fromARGB(255, 242, 243, 247),
+      appBar: _createAppBar(),
+      body: RefreshIndicator(
+        displacement: 15,
+        onRefresh: _getData,
+        child: ListView.separated(
+            physics: new AlwaysScrollableScrollPhysics(),
+            controller: _scrollController,
+            itemBuilder: _createListView,
+            separatorBuilder: (BuildContext context, index) {
+              return Container(
+                height: 5,
+                color: Colors.transparent,
+              );
+            },
+            itemCount: _data.length + 2),
+      ),
+      floatingActionButton: !showToTopBtn
+          ? null
+          : FloatingActionButton(
+              child: Icon(Icons.arrow_upward),
+              onPressed: () {
+                //返回到顶部时执行动画
+                _scrollController.animateTo(.0,
+                    duration: Duration(milliseconds: 200), curve: Curves.ease);
+              }),
+    );
   }
 
   //创建Item
