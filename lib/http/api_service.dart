@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:reading_flutter/common/user.dart';
 import 'package:reading_flutter/http/api.dart';
@@ -6,6 +5,7 @@ import 'package:reading_flutter/http/http_utils.dart';
 import 'package:reading_flutter/model/article_model.dart';
 import 'package:reading_flutter/model/banner_model.dart';
 import 'package:reading_flutter/model/gank_model.dart';
+import 'package:reading_flutter/model/wechat_model.dart';
 
 class ApiService {
   void getBanner(Function callback) async {
@@ -20,7 +20,7 @@ class ApiService {
     HttpUtils.instance.dio
         .get(Api.ARTICLE_LIST + "$_page/json", options: _getOptions())
         .then((response) {
-      callback(ArticleModel(response.data));
+      callback(ArticleModel.fromMap(response.data));
     }).catchError((error) {
       errorback(error);
     });
@@ -45,6 +45,28 @@ class ApiService {
       callback(GankCateBean.fromMap(response.data));
     }).catchError((error) {
       errorback(error);
+    });
+  }
+
+  void getWeChatChapters(Function callback, Function errorback) async {
+    HttpUtils.instance.dio
+        .get(Api.GET_CHAPTERS, options: _getOptions())
+        .then((response) {
+      callback(WeChatModel.fromMap(response.data));
+    }).catchError((error) {
+      errorback(error);
+    });
+  }
+
+  void getWeChatChaptersList(
+      Function callback, Function errorBack, int _id, int _page) async {
+    HttpUtils.instance.dio
+        .get(Api.GET_CHAPTERS_LIST + "$_id/$_page/json", options: _getOptions())
+        .then((response) {
+      print('getWeChatChaptersList' + response.data);
+      callback(ArticleModel.fromMap(response.data));
+    }).catchError((error) {
+      errorBack(error);
     });
   }
 

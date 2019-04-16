@@ -30,6 +30,7 @@ dependencies:
   rxdart:  0.21.0
   shared_preferences: ^0.5.2
   json_annotation: ^0.2.3
+  flutter_easyrefresh: ^1.2.7
 
 dev_dependencies:
   flutter_test:

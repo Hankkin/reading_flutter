@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:reading_flutter/http/api_service.dart';
 import 'package:reading_flutter/model/article_model.dart';
+import 'package:reading_flutter/model/banner_model.dart';
 import 'package:reading_flutter/page/common/web_page.dart';
-import 'package:reading_flutter/page/home/banner.dart';
 import 'package:reading_flutter/res/styles.dart';
 import 'package:reading_flutter/utils/ToastUtils.dart';
 
@@ -16,7 +16,8 @@ class HomePage extends StatefulWidget {
 }
 
 class HomeState extends State<HomePage> {
-  List<Article> _data = new List();
+  List<DatasListBean> _data = new List();
+  List<BannerData> _bannerList = new List();
   int _page = 0;
   ScrollController _scrollController = ScrollController();
   bool showToTopBtn = false; //是否显示“返回到顶部”按钮
@@ -24,6 +25,7 @@ class HomeState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _getBanner();
     _getData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -82,12 +84,55 @@ class HomeState extends State<HomePage> {
     );
   }
 
+  Widget createBannerItem(BuildContext context, int index) {
+    if (_bannerList == null ||
+        _bannerList[index] == null ||
+        _bannerList[index].imagePath == null) {
+      return new Container();
+    }
+    return new InkWell(
+      onTap: () {
+        Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+          return new WebPage(
+            title: _bannerList[index].title,
+            url: _bannerList[index].url,
+          );
+        }));
+      },
+      child: new Container(
+        margin: EdgeInsets.only(top: 8),
+        child: new ClipRRect(
+          child: new Image.network(
+            _bannerList[index].imagePath,
+            fit: BoxFit.fill,
+          ),
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+    );
+  }
+
   //创建Item
   Widget _createListView(BuildContext context, int index) {
     if (index == 0) {
       return Container(
         height: 150,
-        child: new BannerWidget(),
+        child: Swiper(
+          itemBuilder: (BuildContext context, int index) {
+            if (_bannerList[index] == null ||
+                _bannerList[index].imagePath == null) {
+              return new Container(
+                color: Colors.grey[100],
+              );
+            } else {
+              return createBannerItem(context, index);
+            }
+          },
+          itemCount: 5,
+          viewportFraction: 0.8,
+          scale: 0.9,
+          autoplay: true,
+        ),
       );
     }
     if (index < _data.length - 1) {
@@ -189,6 +234,17 @@ class HomeState extends State<HomePage> {
     }, (DioError error) {
       print(error.response);
     }, _page);
+  }
+
+  Future<Null> _getBanner() async {
+    ApiService().getBanner((BannerModel _bannerModel) {
+      if (_bannerModel.data.length > 0) {
+        setState(() {
+          _bannerList.clear();
+          _bannerList.addAll(_bannerModel.data);
+        });
+      }
+    });
   }
 
   Future<Null> _loadRequest() async {

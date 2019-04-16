@@ -5,6 +5,10 @@ class Api {
 
   static const String ARTICLE_LIST = BASE_URL + "article/list/";
 
+  static const String GET_CHAPTERS = BASE_URL + "wxarticle/chapters/json";
+
+  static const String GET_CHAPTERS_LIST = BASE_URL + "wxarticle/list/";
+
   static const String GANK_BASE_URL = "https://gank.io/api/";
 
   static const String TOADY_LIST = GANK_BASE_URL + "today";

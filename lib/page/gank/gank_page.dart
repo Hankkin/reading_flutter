@@ -83,10 +83,11 @@ class ContentList extends StatefulWidget {
   }
 }
 
-class ContentListState extends State<ContentList> {
+class ContentListState extends State<ContentList> with AutomaticKeepAliveClientMixin{
   int _page = 0;
   List<ListBean> _data = new List();
   ScrollController _scrollController = ScrollController();
+  bool showToTopBtn = false; //是否显示“返回到顶部”按钮
 
   @override
   void initState() {
@@ -97,29 +98,49 @@ class ContentListState extends State<ContentList> {
           _scrollController.position.maxScrollExtent) {
         _loadRequest();
       }
+      //当前位置是否超过屏幕高度
+      if (_scrollController.offset < 200 && showToTopBtn) {
+        setState(() {
+          showToTopBtn = false;
+        });
+      } else if (_scrollController.offset >= 200 && showToTopBtn == false) {
+        setState(() {
+          showToTopBtn = true;
+        });
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: RefreshIndicator(
-      displacement: 15,
-      onRefresh: _getCateList,
-      child: Container(
-        child: ListView.separated(
-            padding: EdgeInsets.only(top: 0),
-            controller: _scrollController,
-            itemBuilder: _createListView,
-            separatorBuilder: (BuildContext context, index) {
-              return Container(
-                height: 5,
-                color: Colors.transparent,
-              );
-            },
-            itemCount: _data.length + 1),
+      body: RefreshIndicator(
+        displacement: 15,
+        onRefresh: _getCateList,
+        child: Container(
+          child: ListView.separated(
+              padding: EdgeInsets.only(top: 0),
+              controller: _scrollController,
+              itemBuilder: _createListView,
+              separatorBuilder: (BuildContext context, index) {
+                return Container(
+                  height: 5,
+                  color: Colors.transparent,
+                );
+              },
+              itemCount: _data.length + 1),
+        ),
       ),
-    ));
+      floatingActionButton: !showToTopBtn
+          ? null
+          : FloatingActionButton(
+              child: Icon(Icons.arrow_upward),
+              onPressed: () {
+                //返回到顶部时执行动画
+                _scrollController.animateTo(.0,
+                    duration: Duration(milliseconds: 200), curve: Curves.ease);
+              }),
+    );
   }
 
   Widget _createListView(BuildContext context, int index) {
@@ -246,4 +267,7 @@ class ContentListState extends State<ContentList> {
       });
     }, (DioError error) {}, cate, _page);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
