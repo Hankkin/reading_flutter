@@ -119,7 +119,7 @@ class HomeState extends State<HomePage> {
         height: 150,
         child: Swiper(
           itemBuilder: (BuildContext context, int index) {
-            if (_bannerList[index] == null ||
+            if (_bannerList.length == 0 ||_bannerList[index] == null ||
                 _bannerList[index].imagePath == null) {
               return new Container(
                 color: Colors.grey[100],

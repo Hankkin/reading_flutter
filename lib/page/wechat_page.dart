@@ -5,6 +5,7 @@ import 'package:reading_flutter/model/article_model.dart';
 import 'package:reading_flutter/model/wechat_model.dart';
 import 'package:reading_flutter/page/common/web_page.dart';
 import 'package:reading_flutter/res/styles.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class WeChatPage extends StatefulWidget {
   @override
@@ -26,17 +27,21 @@ class WeChatState extends State<WeChatPage> {
   @override
   Widget build(BuildContext context) {
     _tabController =
-        new TabController(length: _chapters.length, vsync: ScrollableState());
+    new TabController(length: _chapters.length, vsync: ScrollableState());
     return new Scaffold(
       body: Column(
         children: <Widget>[
           Container(
             height: 20,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
           ),
           Container(
             height: 48,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
             child: TabBar(
               tabs: _chapters.map((s) {
                 return Tab(text: s.name);
@@ -82,7 +87,8 @@ class ContentList extends StatefulWidget {
   }
 }
 
-class ContentListState extends State<ContentList> with AutomaticKeepAliveClientMixin{
+class ContentListState extends State<ContentList>
+    with AutomaticKeepAliveClientMixin {
   int _page = 0;
   List<DatasListBean> _data = new List();
   ScrollController _scrollController = ScrollController();
@@ -116,30 +122,33 @@ class ContentListState extends State<ContentList> with AutomaticKeepAliveClientM
       body: RefreshIndicator(
         displacement: 15,
         onRefresh: _getChapterList,
-        child: Container(
-          child: ListView.separated(
-              padding: EdgeInsets.only(top: 0),
-              controller: _scrollController,
-              itemBuilder: _createListView,
-              separatorBuilder: (BuildContext context, index) {
-                return Container(
-                  height: 5,
-                  color: Colors.transparent,
-                );
-              },
-              itemCount: _data.length + 1),
-        ),
+        child: _createContent(),
       ),
       floatingActionButton: !showToTopBtn
           ? null
           : FloatingActionButton(
-              child: Icon(Icons.arrow_upward),
-              onPressed: () {
-                //返回到顶部时执行动画
-                _scrollController.animateTo(.0,
-                    duration: Duration(milliseconds: 200), curve: Curves.ease);
-              }),
+          child: Icon(Icons.arrow_upward),
+          onPressed: () {
+            //返回到顶部时执行动画
+            _scrollController.animateTo(.0,
+                duration: Duration(milliseconds: 200), curve: Curves.ease);
+          }),
     );
+  }
+
+  Widget _createContent() {
+    return _data.length == 0 ? new Center(
+      child: SpinKitCircle(color: Theme.of(context).primaryColor),) : ListView.separated(
+        padding: EdgeInsets.only(top: 0),
+        controller: _scrollController,
+        itemBuilder: _createListView,
+        separatorBuilder: (BuildContext context, index) {
+          return Container(
+            height: 5,
+            color: Colors.transparent,
+          );
+        },
+        itemCount: _data.length + 1);
   }
 
   //创建Item
@@ -168,7 +177,8 @@ class ContentListState extends State<ContentList> with AutomaticKeepAliveClientM
                     ),
                     Expanded(
                       child: Text(
-                        "${_data[index].chapterName} / ${_data[index].superChapterName}",
+                        "${_data[index].chapterName} / ${_data[index]
+                            .superChapterName}",
                         style: TextStyles.listSub,
                         textAlign: TextAlign.right,
                       ),
@@ -213,9 +223,9 @@ class ContentListState extends State<ContentList> with AutomaticKeepAliveClientM
   }
 
   Widget _getTagText(int index) {
-    if (_data[index - 1].tags.length > 0) {
+    if (_data[index].tags.length > 0) {
       String tagStr = "";
-      _data[index - 1].tags.forEach((tag) {
+      _data[index].tags.forEach((tag) {
         tagStr = "$tagStr" + "${tag.name}";
       });
       return Text(
@@ -231,7 +241,7 @@ class ContentListState extends State<ContentList> with AutomaticKeepAliveClientM
     _page = 0;
     int id = widget._id;
     ApiService().getWeChatChaptersList((ArticleModel _articleModel) {
-      if (_articleModel.errorCode != 0) {
+      if (_articleModel.errorCode == 0) {
         if (_articleModel.data != null) {
           setState(() {
             _data.clear();

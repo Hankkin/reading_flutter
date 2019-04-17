@@ -23,6 +23,7 @@ class ApiService {
       callback(ArticleModel.fromMap(response.data));
     }).catchError((error) {
       errorback(error);
+      print(error);
     });
   }
 
@@ -33,7 +34,6 @@ class ApiService {
       callback(GankModel.fromMap(response.data));
     }).catchError((error) {
       errorback(error);
-      print(error);
     });
   }
 
@@ -63,10 +63,9 @@ class ApiService {
     HttpUtils.instance.dio
         .get(Api.GET_CHAPTERS_LIST + "$_id/$_page/json", options: _getOptions())
         .then((response) {
-      print('getWeChatChaptersList' + response.data);
       callback(ArticleModel.fromMap(response.data));
     }).catchError((error) {
-      errorBack(error);
+      print(error);
     });
   }
 

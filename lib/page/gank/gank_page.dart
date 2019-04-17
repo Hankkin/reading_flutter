@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:reading_flutter/http/api_service.dart';
 import 'package:reading_flutter/model/gank_model.dart';
 import 'package:reading_flutter/page/common/web_page.dart';
@@ -83,7 +84,8 @@ class ContentList extends StatefulWidget {
   }
 }
 
-class ContentListState extends State<ContentList> with AutomaticKeepAliveClientMixin{
+class ContentListState extends State<ContentList>
+    with AutomaticKeepAliveClientMixin {
   int _page = 0;
   List<ListBean> _data = new List();
   ScrollController _scrollController = ScrollController();
@@ -118,17 +120,7 @@ class ContentListState extends State<ContentList> with AutomaticKeepAliveClientM
         displacement: 15,
         onRefresh: _getCateList,
         child: Container(
-          child: ListView.separated(
-              padding: EdgeInsets.only(top: 0),
-              controller: _scrollController,
-              itemBuilder: _createListView,
-              separatorBuilder: (BuildContext context, index) {
-                return Container(
-                  height: 5,
-                  color: Colors.transparent,
-                );
-              },
-              itemCount: _data.length + 1),
+          child: _createContent(),
         ),
       ),
       floatingActionButton: !showToTopBtn
@@ -141,6 +133,24 @@ class ContentListState extends State<ContentList> with AutomaticKeepAliveClientM
                     duration: Duration(milliseconds: 200), curve: Curves.ease);
               }),
     );
+  }
+
+  Widget _createContent() {
+    return _data.length == 0
+        ? new Center(
+            child: SpinKitCircle(color: Theme.of(context).primaryColor)
+          )
+        : ListView.separated(
+            padding: EdgeInsets.only(top: 0),
+            controller: _scrollController,
+            itemBuilder: _createListView,
+            separatorBuilder: (BuildContext context, index) {
+              return Container(
+                height: 5,
+                color: Colors.transparent,
+              );
+            },
+            itemCount: _data.length + 1);
   }
 
   Widget _createListView(BuildContext context, int index) {
