@@ -14,7 +14,7 @@ class WeChatPage extends StatefulWidget {
   }
 }
 
-class WeChatState extends State<WeChatPage> {
+class WeChatState extends State<WeChatPage> with AutomaticKeepAliveClientMixin{
   List<DataListBean> _chapters = new List();
   TabController _tabController;
 
@@ -74,6 +74,9 @@ class WeChatState extends State<WeChatPage> {
       }
     }, (DioError error) {});
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class ContentList extends StatefulWidget {
@@ -88,7 +91,7 @@ class ContentList extends StatefulWidget {
 }
 
 class ContentListState extends State<ContentList>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin,TickerProviderStateMixin {
   int _page = 0;
   List<DatasListBean> _data = new List();
   ScrollController _scrollController = ScrollController();

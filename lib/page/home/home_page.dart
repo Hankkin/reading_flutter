@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
   }
 }
 
-class HomeState extends State<HomePage> {
+class HomeState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   List<DatasListBean> _data = new List();
   List<BannerData> _bannerList = new List();
   int _page = 0;
@@ -119,7 +119,8 @@ class HomeState extends State<HomePage> {
         height: 150,
         child: Swiper(
           itemBuilder: (BuildContext context, int index) {
-            if (_bannerList.length == 0 ||_bannerList[index] == null ||
+            if (_bannerList.length == 0 ||
+                _bannerList[index] == null ||
                 _bannerList[index].imagePath == null) {
               return new Container(
                 color: Colors.grey[100],
@@ -283,4 +284,7 @@ class HomeState extends State<HomePage> {
           )
         ]);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

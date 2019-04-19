@@ -33,7 +33,7 @@ class MainPageWidget extends StatefulWidget {
   }
 }
 
-class MainPageState extends State<MainPageWidget> {
+class MainPageState extends State<MainPageWidget> with AutomaticKeepAliveClientMixin{
   int tabIndex = 0;
   static List tabImgs = [
     new Icon(Icons.home),
@@ -113,4 +113,7 @@ class MainPageState extends State<MainPageWidget> {
         ) ??
         false;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

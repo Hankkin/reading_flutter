@@ -13,7 +13,7 @@ class GankPage extends StatefulWidget {
   }
 }
 
-class GankStatePage extends State<GankPage> {
+class GankStatePage extends State<GankPage> with AutomaticKeepAliveClientMixin,TickerProviderStateMixin{
   List<String> _titles = List();
   TabController _tabController;
 
@@ -38,7 +38,7 @@ class GankStatePage extends State<GankPage> {
   @override
   Widget build(BuildContext context) {
     _tabController =
-        new TabController(length: _titles.length, vsync: ScrollableState());
+    new TabController(length: _titles.length, vsync: this);
     return new Scaffold(
       body: Column(
         children: <Widget>[
@@ -49,9 +49,9 @@ class GankStatePage extends State<GankPage> {
           Container(
             height: 48,
             color: Theme.of(context).primaryColor,
-            child: TabBar(
+            child: new TabBar(
               tabs: _titles.map((s) {
-                return Tab(text: s);
+                return new Tab(text: s);
               }).toList(),
               indicatorColor: Colors.white,
               controller: _tabController,
@@ -71,6 +71,15 @@ class GankStatePage extends State<GankPage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
+  }
 }
 
 class ContentList extends StatefulWidget {
@@ -85,7 +94,7 @@ class ContentList extends StatefulWidget {
 }
 
 class ContentListState extends State<ContentList>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin,TickerProviderStateMixin {
   int _page = 0;
   List<ListBean> _data = new List();
   ScrollController _scrollController = ScrollController();
@@ -280,4 +289,5 @@ class ContentListState extends State<ContentList>
 
   @override
   bool get wantKeepAlive => true;
+
 }
